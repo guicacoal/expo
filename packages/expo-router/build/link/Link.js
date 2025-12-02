@@ -40,6 +40,7 @@ function Link(props) {
     Trigger: elements_1.LinkTrigger,
     Preview: elements_1.LinkPreview,
     MenuAction: elements_1.LinkMenuAction,
+    TransitionTarget: ExpoLink_1.LinkZoomTransitionTarget,
 });
 var Redirect_1 = require("./Redirect");
 Object.defineProperty(exports, "Redirect", { enumerable: true, get: function () { return Redirect_1.Redirect; } });

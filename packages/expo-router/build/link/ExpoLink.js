@@ -38,13 +38,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExpoLink = ExpoLink;
+exports.LinkZoomTransitionTarget = LinkZoomTransitionTarget;
 const expo_constants_1 = __importDefault(require("expo-constants"));
 const react_1 = __importStar(require("react"));
 const BaseExpoRouterLink_1 = require("./BaseExpoRouterLink");
 const LinkWithPreview_1 = require("./LinkWithPreview");
 const elements_1 = require("./elements");
 const PreviewRouteContext_1 = require("./preview/PreviewRouteContext");
+const native_1 = require("./preview/native");
 const useZoomTransitionPrimitives_1 = require("./useZoomTransitionPrimitives");
+const zoom_1 = require("./zoom");
 const url_1 = require("../utils/url");
 function ExpoLink(props) {
     const isPreview = (0, PreviewRouteContext_1.useIsPreview)();
@@ -71,5 +74,18 @@ function isLinkWithPreview(props) {
     const isExternal = (0, url_1.shouldLinkExternally)(String(props.href));
     return react_1.Children.toArray(props.children).some((child) => (0, react_1.isValidElement)(child) &&
         ((!isExternal && child.type === elements_1.LinkPreview) || child.type === elements_1.LinkMenu));
+}
+function LinkZoomTransitionTarget({ children }) {
+    const { identifier } = (0, react_1.use)(zoom_1.ZoomContext);
+    if (react_1.Children.count(children) > 1) {
+        console.warn('[expo-router] Link.ZoomTransitionTarget only accepts a single child component. Please wrap multiple children in a View or another container component.');
+        return null;
+    }
+    if (!identifier) {
+        return children;
+    }
+    return (<native_1.ZoomTransitionSourceAlignmentRectProvider identifier={identifier}>
+      {children}
+    </native_1.ZoomTransitionSourceAlignmentRectProvider>);
 }
 //# sourceMappingURL=ExpoLink.js.map

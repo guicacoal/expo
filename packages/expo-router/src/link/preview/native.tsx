@@ -1,7 +1,7 @@
 'use client';
 
 import { requireNativeView } from 'expo';
-import type { PropsWithChildren } from 'react';
+import { Fragment, type PropsWithChildren } from 'react';
 import { Platform, StyleSheet, type ViewProps } from 'react-native';
 
 const areNativeViewsAvailable =
@@ -140,6 +140,27 @@ export function LinkZoomTransitionSource(
   }
   return (
     <LinkZoomTransitionSourceNativeView
+      {...props}
+      disableForceFlatten
+      style={{ display: 'contents' }}
+    />
+  );
+}
+
+const ZoomTransitionSourceAlignmentRectProviderNativeView: React.ComponentType<
+  ViewProps & { identifier: string; disableForceFlatten?: boolean; children?: React.ReactNode }
+> | null = areNativeViewsAvailable
+  ? requireNativeView('ExpoRouterNativeLinkPreview', 'LinkZoomTransitionAlignmentRectProvider')
+  : Fragment;
+export function ZoomTransitionSourceAlignmentRectProvider(props: {
+  identifier: string;
+  children: React.ReactNode;
+}) {
+  if (!ZoomTransitionSourceAlignmentRectProviderNativeView) {
+    return null;
+  }
+  return (
+    <ZoomTransitionSourceAlignmentRectProviderNativeView
       {...props}
       disableForceFlatten
       style={{ display: 'contents' }}

@@ -1,4 +1,4 @@
-import { ExpoLink } from './ExpoLink';
+import { ExpoLink, LinkZoomTransitionTarget } from './ExpoLink';
 import { LinkMenu, LinkMenuAction, LinkPreview, LinkTrigger } from './elements';
 import { resolveHref } from './href';
 import type { LinkProps, WebAnchorProps } from './useLinkHooks';
@@ -40,6 +40,7 @@ export const Link = Object.assign(
     Trigger: LinkTrigger,
     Preview: LinkPreview,
     MenuAction: LinkMenuAction,
+    TransitionTarget: LinkZoomTransitionTarget,
   }
 );
 

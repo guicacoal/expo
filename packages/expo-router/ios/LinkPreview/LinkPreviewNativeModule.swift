@@ -106,6 +106,16 @@ public class LinkPreviewNativeModule: Module {
         // This prop is used in ExpoShadowNode in order to disable force flattening, when display: contents is used
       }
     }
+
+    View(LinkZoomTransitionAlignmentRectProvider.self) {
+      Prop("identifier") {
+        (view: LinkZoomTransitionAlignmentRectProvider, identifier: String) in
+        view.identifier = identifier
+      }
+      Prop("disableForceFlatten") { (_: LinkZoomTransitionAlignmentRectProvider, _: Bool) in
+        // This prop is used in ExpoShadowNode in order to disable force flattening, when display: contents is used
+      }
+    }
   }
 }
 

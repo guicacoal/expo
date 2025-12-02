@@ -1,14 +1,16 @@
 'use client';
 
 import Constants from 'expo-constants';
-import React, { Children, isValidElement } from 'react';
+import React, { Children, isValidElement, use, type PropsWithChildren } from 'react';
 
 import { BaseExpoRouterLink } from './BaseExpoRouterLink';
 import { LinkWithPreview } from './LinkWithPreview';
 import { LinkMenu, LinkPreview } from './elements';
 import { useIsPreview } from './preview/PreviewRouteContext';
+import { ZoomTransitionSourceAlignmentRectProvider } from './preview/native';
 import { LinkProps } from './useLinkHooks';
 import { useZoomTransitionPrimitives } from './useZoomTransitionPrimitives';
+import { ZoomContext } from './zoom';
 import { shouldLinkExternally } from '../utils/url';
 
 export function ExpoLink(props: LinkProps) {
@@ -47,5 +49,23 @@ function isLinkWithPreview(props: LinkProps): boolean {
     (child) =>
       isValidElement(child) &&
       ((!isExternal && child.type === LinkPreview) || child.type === LinkMenu)
+  );
+}
+
+export function LinkZoomTransitionTarget({ children }: PropsWithChildren) {
+  const { identifier } = use(ZoomContext);
+  if (Children.count(children) > 1) {
+    console.warn(
+      '[expo-router] Link.ZoomTransitionTarget only accepts a single child component. Please wrap multiple children in a View or another container component.'
+    );
+    return null;
+  }
+  if (!identifier) {
+    return children;
+  }
+  return (
+    <ZoomTransitionSourceAlignmentRectProvider identifier={identifier}>
+      {children}
+    </ZoomTransitionSourceAlignmentRectProvider>
   );
 }

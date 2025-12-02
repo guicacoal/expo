@@ -1,5 +1,5 @@
 import { Link, usePathname } from 'expo-router';
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -176,93 +176,21 @@ const HomeIndex = () => {
             </Pressable>
           </Link.Trigger>
         </Link>
-        <LinkWithZoomTransitionAlignRect />
+        <Link href="/zoom-dest-contain" unstable_transition="zoom" asChild>
+          <Link.Trigger>
+            <Pressable style={{ flex: 5, alignItems: 'center', aspectRatio: 1 }}>
+              <Image
+                source={require('../../../assets/frog.jpg')}
+                resizeMode="cover"
+                style={{ width: '100%', height: '100%' }}
+              />
+            </Pressable>
+          </Link.Trigger>
+        </Link>
       </View>
     </ScrollView>
   );
 };
-
-function LinkWithZoomTransitionAlignRect() {
-  const { width, height } = useWindowDimensions();
-  const [imageWrapperLayout, setImageWrapperLayout] = useState<
-    { x: number; y: number; width: number; height: number } | undefined
-  >();
-  const [imageOriginalSize, setImageOriginalSize] = useState<
-    { width: number; height: number } | undefined
-  >();
-
-  // We are calculating the alignment of the image in the destination screen
-  // In the destination screen, the image is resized to be fully visible while maintaining aspect ratio
-  // Thus we need to place the image from link in the center of the screen with the correct size
-  const zoomViewAlignmentRect = useMemo(() => {
-    if (!imageWrapperLayout || !imageOriginalSize) {
-      return undefined;
-    }
-
-    const imageAspectRatio = imageOriginalSize.width / imageOriginalSize.height;
-    const containerAspectRatio = imageWrapperLayout.width / imageWrapperLayout.height;
-    const windowAspectRatio = width / height;
-
-    if (imageAspectRatio > windowAspectRatio) {
-      // Image is wider than window - destination width matches window width
-      const destWidth = width;
-      const destHeight = destWidth / containerAspectRatio;
-      const x = 0;
-      const y = (height - destHeight) / 2;
-
-      return {
-        x,
-        y,
-        width: destWidth,
-        height: destHeight,
-      };
-    } else {
-      // Image is taller than window - destination height matches window height
-      const destHeight = height;
-      const destWidth = destHeight * containerAspectRatio;
-      const x = (width - destWidth) / 2;
-      const y = 0;
-
-      return {
-        x,
-        y,
-        width: destWidth,
-        height: destHeight,
-      };
-    }
-  }, [imageWrapperLayout, imageOriginalSize, width, height]);
-  return (
-    <Link
-      href="/zoom-dest-contain"
-      unstable_transition="zoom"
-      unstable_transitionAlignmentRect={zoomViewAlignmentRect}
-      asChild>
-      <Link.Trigger>
-        <Pressable style={{ flex: 5, alignItems: 'center' }}>
-          <View
-            style={{ width: '100%', aspectRatio: 1 }}
-            onLayout={(e) => {
-              setImageWrapperLayout(e.nativeEvent.layout);
-            }}>
-            <Image
-              source={require('../../../assets/frog.jpg')}
-              resizeMode="cover"
-              onLoad={(e) => {
-                if (process.env.EXPO_OS === 'ios') {
-                  setImageOriginalSize({
-                    width: e.nativeEvent.source.width,
-                    height: e.nativeEvent.source.height,
-                  });
-                }
-              }}
-              style={{ width: '100%', height: '100%' }}
-            />
-          </View>
-        </Pressable>
-      </Link.Trigger>
-    </Link>
-  );
-}
 
 const Spacer = () => (
   <View

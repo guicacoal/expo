@@ -223,6 +223,14 @@ export interface LinkProps extends Omit<TextProps, 'href'>, WebAnchorProps {
         width: number;
         height: number;
     };
+    /**
+     * When set to true, indicates that a custom transition source is being used for the zoom transition. When no Link.TransitionSource is provided as a child of the Link, the zoom transition will start and end at the center of the screen.
+     *
+     * When this prop is set to false and Link.TransitionSource is provided, an error will be thrown.
+     *
+     * @platform ios 18+
+     */
+    unstable_customTransitionSource?: boolean;
     ref?: Ref<Text>;
 }
 export declare function useInteropClassName(props: {

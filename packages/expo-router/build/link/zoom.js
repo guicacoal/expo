@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ZoomContext = void 0;
+exports.ZoomSourceContext = exports.ZoomContext = void 0;
 exports.ZoomContextProvider = ZoomContextProvider;
 const react_1 = require("react");
 const ZoomTransitionEnabler_ios_1 = require("./ZoomTransitionEnabler.ios");
 const navigationParams_1 = require("../navigationParams");
 const PreviewRouteContext_1 = require("./preview/PreviewRouteContext");
 exports.ZoomContext = (0, react_1.createContext)({ identifier: null });
+exports.ZoomSourceContext = (0, react_1.createContext)(undefined);
 function ZoomContextProvider({ route, children }) {
     const isPreview = (0, PreviewRouteContext_1.useIsPreview)();
     if ((0, ZoomTransitionEnabler_ios_1.isZoomTransitionEnabled)() &&

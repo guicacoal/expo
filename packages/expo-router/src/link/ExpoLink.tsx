@@ -5,12 +5,16 @@ import React, { Children, isValidElement, use, type PropsWithChildren } from 're
 
 import { BaseExpoRouterLink } from './BaseExpoRouterLink';
 import { LinkWithPreview } from './LinkWithPreview';
+import { isZoomTransitionEnabled } from './ZoomTransitionEnabler';
 import { LinkMenu, LinkPreview } from './elements';
 import { useIsPreview } from './preview/PreviewRouteContext';
-import { ZoomTransitionSourceAlignmentRectProvider } from './preview/native';
+import {
+  LinkZoomTransitionSource,
+  ZoomTransitionSourceAlignmentRectProvider,
+} from './preview/native';
 import { LinkProps } from './useLinkHooks';
 import { useZoomTransitionPrimitives } from './useZoomTransitionPrimitives';
-import { ZoomContext } from './zoom';
+import { ZoomContext, ZoomSourceContext } from './zoom';
 import { shouldLinkExternally } from '../utils/url';
 
 export function ExpoLink(props: LinkProps) {
@@ -67,5 +71,31 @@ export function LinkZoomTransitionTarget({ children }: PropsWithChildren) {
     <ZoomTransitionSourceAlignmentRectProvider identifier={identifier}>
       {children}
     </ZoomTransitionSourceAlignmentRectProvider>
+  );
+}
+
+export function LinkZoomTransitionSourceWrapper({ children }: PropsWithChildren) {
+  if (!isZoomTransitionEnabled()) {
+    return children;
+  }
+  const value = use(ZoomSourceContext);
+  if (!value) {
+    throw new Error(
+      '[expo-router] Link.ZoomTransitionSource must be used within a Link component with unstable_transition="zoom" and unstable_customTransitionSource={true}.'
+    );
+  }
+  const { identifier, alignment } = value;
+  console.log('Link.ZoomTransitionSourceWrapper rendering with identifier:', identifier);
+  if (Children.count(children) > 1) {
+    console.warn(
+      '[expo-router] Link.ZoomTransitionSource only accepts a single child component. Please wrap multiple children in a View or another container component.'
+    );
+    return null;
+  }
+
+  return (
+    <LinkZoomTransitionSource identifier={identifier} alignment={alignment}>
+      {children}
+    </LinkZoomTransitionSource>
   );
 }

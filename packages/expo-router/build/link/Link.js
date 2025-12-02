@@ -41,6 +41,7 @@ function Link(props) {
     Preview: elements_1.LinkPreview,
     MenuAction: elements_1.LinkMenuAction,
     TransitionTarget: ExpoLink_1.LinkZoomTransitionTarget,
+    TransitionSource: ExpoLink_1.LinkZoomTransitionSourceWrapper,
 });
 var Redirect_1 = require("./Redirect");
 Object.defineProperty(exports, "Redirect", { enumerable: true, get: function () { return Redirect_1.Redirect; } });

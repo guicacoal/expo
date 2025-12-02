@@ -41,10 +41,11 @@ const navigationParams_1 = require("../navigationParams");
 const ZoomTransitionEnabler_1 = require("./ZoomTransitionEnabler");
 const PreviewRouteContext_1 = require("./preview/PreviewRouteContext");
 const native_1 = require("./preview/native");
+const zoom_1 = require("./zoom");
 const NOOP_COMPONENT = (props) => {
     return props.children;
 };
-function useZoomTransitionPrimitives({ unstable_transition, unstable_transitionAlignmentRect, href, }) {
+function useZoomTransitionPrimitives({ unstable_transition, unstable_transitionAlignmentRect, unstable_customTransitionSource, href, }) {
     const isPreview = (0, PreviewRouteContext_1.useIsPreview)();
     const zoomTransitionId = (0, react_1.useMemo)(() => unstable_transition === 'zoom' &&
         !isPreview &&
@@ -56,15 +57,26 @@ function useZoomTransitionPrimitives({ unstable_transition, unstable_transitionA
         if (!zoomTransitionId) {
             return NOOP_COMPONENT;
         }
-        return (props) => (<native_1.LinkZoomTransitionSource identifier={zoomTransitionId} alignment={unstable_transitionAlignmentRect}>
-        {props.children}
-      </native_1.LinkZoomTransitionSource>);
+        const value = unstable_customTransitionSource
+            ? { identifier: zoomTransitionId, alignment: unstable_transitionAlignmentRect }
+            : undefined;
+        const Wrapper = (props) => (<zoom_1.ZoomSourceContext value={value}>{props.children}</zoom_1.ZoomSourceContext>);
+        console.log('useZoomTransitionPrimitives creating Wrapper with custom source:', unstable_customTransitionSource, value);
+        if (unstable_customTransitionSource) {
+            return Wrapper;
+        }
+        return (props) => (<Wrapper>
+        <native_1.LinkZoomTransitionSource identifier={zoomTransitionId} alignment={unstable_transitionAlignmentRect}>
+          {props.children}
+        </native_1.LinkZoomTransitionSource>
+      </Wrapper>);
     }, [
         zoomTransitionId,
         unstable_transitionAlignmentRect?.x,
         unstable_transitionAlignmentRect?.y,
         unstable_transitionAlignmentRect?.width,
         unstable_transitionAlignmentRect?.height,
+        unstable_customTransitionSource,
     ]);
     const computedHref = (0, react_1.useMemo)(() => {
         if (!zoomTransitionId) {

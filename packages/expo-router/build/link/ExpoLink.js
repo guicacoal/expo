@@ -39,10 +39,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExpoLink = ExpoLink;
 exports.LinkZoomTransitionTarget = LinkZoomTransitionTarget;
+exports.LinkZoomTransitionSourceWrapper = LinkZoomTransitionSourceWrapper;
 const expo_constants_1 = __importDefault(require("expo-constants"));
 const react_1 = __importStar(require("react"));
 const BaseExpoRouterLink_1 = require("./BaseExpoRouterLink");
 const LinkWithPreview_1 = require("./LinkWithPreview");
+const ZoomTransitionEnabler_1 = require("./ZoomTransitionEnabler");
 const elements_1 = require("./elements");
 const PreviewRouteContext_1 = require("./preview/PreviewRouteContext");
 const native_1 = require("./preview/native");
@@ -87,5 +89,23 @@ function LinkZoomTransitionTarget({ children }) {
     return (<native_1.ZoomTransitionSourceAlignmentRectProvider identifier={identifier}>
       {children}
     </native_1.ZoomTransitionSourceAlignmentRectProvider>);
+}
+function LinkZoomTransitionSourceWrapper({ children }) {
+    if (!(0, ZoomTransitionEnabler_1.isZoomTransitionEnabled)()) {
+        return children;
+    }
+    const value = (0, react_1.use)(zoom_1.ZoomSourceContext);
+    if (!value) {
+        throw new Error('[expo-router] Link.ZoomTransitionSource must be used within a Link component with unstable_transition="zoom" and unstable_customTransitionSource={true}.');
+    }
+    const { identifier, alignment } = value;
+    console.log('Link.ZoomTransitionSourceWrapper rendering with identifier:', identifier);
+    if (react_1.Children.count(children) > 1) {
+        console.warn('[expo-router] Link.ZoomTransitionSource only accepts a single child component. Please wrap multiple children in a View or another container component.');
+        return null;
+    }
+    return (<native_1.LinkZoomTransitionSource identifier={identifier} alignment={alignment}>
+      {children}
+    </native_1.LinkZoomTransitionSource>);
 }
 //# sourceMappingURL=ExpoLink.js.map

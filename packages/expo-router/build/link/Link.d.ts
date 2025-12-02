@@ -1,4 +1,4 @@
-import { LinkZoomTransitionTarget } from './ExpoLink';
+import { LinkZoomTransitionSourceWrapper, LinkZoomTransitionTarget } from './ExpoLink';
 import { LinkMenuAction, LinkPreview, LinkTrigger } from './elements';
 import type { LinkProps, WebAnchorProps } from './useLinkHooks';
 export declare const Link: ((props: LinkProps) => import("react").JSX.Element) & {
@@ -8,6 +8,7 @@ export declare const Link: ((props: LinkProps) => import("react").JSX.Element) &
     Preview: typeof LinkPreview;
     MenuAction: typeof LinkMenuAction;
     TransitionTarget: typeof LinkZoomTransitionTarget;
+    TransitionSource: typeof LinkZoomTransitionSourceWrapper;
 };
 export type LinkComponent = typeof Link;
 export { LinkProps, WebAnchorProps };

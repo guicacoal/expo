@@ -7,8 +7,16 @@ import {
   INTERNAL_EXPO_ROUTER_ZOOM_TRANSITION_SOURCE_ID_PARAM_NAME,
 } from '../navigationParams';
 import { useIsPreview } from './preview/PreviewRouteContext';
+import type { LinkProps } from './useLinkHooks';
 
 export const ZoomContext = createContext<{ identifier: string | null }>({ identifier: null });
+export const ZoomSourceContext = createContext<
+  | {
+      identifier: string;
+      alignment: LinkProps['unstable_transitionAlignmentRect'];
+    }
+  | undefined
+>(undefined);
 
 export function ZoomContextProvider({ route, children }: PropsWithChildren<{ route: unknown }>) {
   const isPreview = useIsPreview();

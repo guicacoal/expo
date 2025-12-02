@@ -1,4 +1,4 @@
-import { ExpoLink, LinkZoomTransitionTarget } from './ExpoLink';
+import { ExpoLink, LinkZoomTransitionSourceWrapper, LinkZoomTransitionTarget } from './ExpoLink';
 import { LinkMenu, LinkMenuAction, LinkPreview, LinkTrigger } from './elements';
 import { resolveHref } from './href';
 import type { LinkProps, WebAnchorProps } from './useLinkHooks';
@@ -41,6 +41,7 @@ export const Link = Object.assign(
     Preview: LinkPreview,
     MenuAction: LinkMenuAction,
     TransitionTarget: LinkZoomTransitionTarget,
+    TransitionSource: LinkZoomTransitionSourceWrapper,
   }
 );
 
